@@ -25,9 +25,12 @@ class AuthProvider extends ChangeNotifier {
 
   login(BuildContext context, {required String username, required String password}) async {
     putLoading(true);
-    var data = await ApiServices().login(username, password);
+    Map<String, dynamic>? data = await ApiServices().login(username, password);
     print(data);
     try {
+      if (data!.isEmpty) {
+        throw "Error";
+      }
       userModel = UserModel.fromJson(data);
       SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
       sharedPreferences.setString('token', jsonEncode(data));
@@ -38,7 +41,7 @@ class AuthProvider extends ChangeNotifier {
       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomeScreen()), (route) => false);
     } catch (e) {
       print(e);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error"), backgroundColor: Colors.red));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Invalid Credentials"), backgroundColor: Colors.red));
     }
     putLoading(false);
   }
