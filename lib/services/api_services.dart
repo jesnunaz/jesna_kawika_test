@@ -9,7 +9,7 @@ class ApiServices {
 
   login(String username, String password) async {
     var request = http.Request('POST', Uri.parse('https://dummyjson.com/auth/login'));
-    request.body = json.encode({"username": "emilys", "password": "emilyspass"});
+    request.body = json.encode({"username": username, "password": password});
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
